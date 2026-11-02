@@ -1,0 +1,4 @@
+# The corpora of the reference set: name, git revision, search roots (colon-separated,
+# the ROOTS of that project's own outline.py).
+etcs-dmi     f91dcba1  evc:dmi:common:sim:ports/hosted:test/src
+FreedomChat  132ce12   core/src:core/sim:core/tests/src:unishox_spark/src:ada-mobile/runtime/src:ada-mobile/runtime/selftest

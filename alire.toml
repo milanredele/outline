@@ -1,0 +1,10 @@
+name = "ada_outline"
+description = "Read Ada units piecewise: subprograms, contracts, declarations"
+version = "0.1.0-dev"
+licenses = "Apache-2.0"
+authors = ["Milán Redele"]
+maintainers = ["Milán Redele <milan.redele@gmail.com>"]
+maintainers-logins = ["milanredele"]
+tags = ["ada", "spark", "tool", "agents", "outline"]
+executables = ["ada_outline"]
+project-files = ["ada_outline.gpr"]

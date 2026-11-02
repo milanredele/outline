@@ -1,0 +1,9 @@
+obj/
+bin/
+alire/
+config/
+tests/reference/outputs/
+tests/**/obj/
+tests/**/bin/
+tests/obj/
+__pycache__/
