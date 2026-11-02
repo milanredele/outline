@@ -1,4 +1,4 @@
-# ada_outline
+# outline
 
 Read Ada units piecewise: the subprograms of a unit with their lines and contracts, one
 subprogram or declaration in full, the declarations a caller needs, the uses of a name. For
@@ -13,7 +13,7 @@ version finds declarations with line patterns; this one has a lexer.
 
 Work in progress. In place:
 
-- **The lexer** (`src/ada_outline-lexer.ads`): the lexical elements of Ada 2022, one at a time,
+- **The lexer** (`src/outline-lexer.ads`): the lexical elements of Ada 2022, one at a time,
   from a source in memory. It accepts any byte sequence and never raises: GNATprove proves the
   absence of run-time errors and its contracts (188 checks, no assumption). It tells a tick
   from a character literal (`Character'('(')`, `P.all'Size`), keeps `--` inside a string
@@ -34,8 +34,8 @@ they exist.
 With [Alire](https://alire.ada.dev) 2.x:
 
 ```sh
-alr build                                             # bin/ada_outline
-bin/ada_outline --tokens src/ada_outline-lexer.adb    # the tokens of a file (a development aid)
+alr build                                             # bin/outline
+bin/outline --tokens src/outline-lexer.adb    # the tokens of a file (a development aid)
 tests/run.sh                                          # build, lexer cases, proof
 tests/run.sh etcs-dmi=../etcs-dmi FreedomChat=../FreedomChat   # and the corpora
 ```

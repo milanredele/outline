@@ -1,6 +1,6 @@
 --  SPDX-License-Identifier: Apache-2.0
 --
---  The tests of Ada_Outline.Lexer.
+--  The tests of Outline.Lexer.
 --
 --    test_lexer                  the unit cases below; exit status 1 on a failure
 --    test_lexer --corpus DIR...  every .ads and .adb under the directories:
@@ -15,13 +15,13 @@ with Ada.Command_Line;
 with Ada.Directories;
 with Ada.Strings.Unbounded;
 with Ada.Text_IO;
-with Ada_Outline.Files;
-with Ada_Outline.Lexer;
+with Outline.Files;
+with Outline.Lexer;
 
 procedure Test_Lexer is
    use Ada.Text_IO;
    use Ada.Strings.Unbounded;
-   use Ada_Outline.Lexer;
+   use Outline.Lexer;
 
    Failures : Natural := 0;
    Cases    : Natural := 0;
@@ -189,7 +189,7 @@ procedure Test_Lexer is
 
    --  The corpus check of one file.
    procedure Check_File (Path : String) is
-      Source    : constant String := Ada_Outline.Files.Read (Path);
+      Source    : constant String := Outline.Files.Read (Path);
       C         : Cursor := Start (Source);
       T         : Token;
       Expect    : Positive := 1;     --  the first byte not yet covered

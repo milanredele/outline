@@ -1,5 +1,5 @@
 --  SPDX-License-Identifier: Apache-2.0
-with "../../ada_outline.gpr";
+with "../../outline.gpr";
 
 project Test_Lexer is
    for Source_Dirs use (".");
@@ -8,6 +8,6 @@ project Test_Lexer is
    for Main use ("test_lexer.adb");
    for Create_Missing_Dirs use "True";
 
-   package Compiler renames Ada_Outline.Compiler;
-   package Binder renames Ada_Outline.Binder;
+   package Compiler renames Outline.Compiler;
+   package Binder renames Outline.Binder;
 end Test_Lexer;

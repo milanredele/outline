@@ -3,7 +3,7 @@
 with Ada.Directories;
 with Ada.Streams.Stream_IO;
 
-package body Ada_Outline.Files is
+package body Outline.Files is
 
    function Read (Path : String) return String is
       use Ada.Streams.Stream_IO;
@@ -17,4 +17,4 @@ package body Ada_Outline.Files is
       end return;
    end Read;
 
-end Ada_Outline.Files;
+end Outline.Files;

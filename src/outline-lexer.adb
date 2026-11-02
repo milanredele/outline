@@ -1,6 +1,6 @@
 --  SPDX-License-Identifier: Apache-2.0
 
-package body Ada_Outline.Lexer with SPARK_Mode => On is
+package body Outline.Lexer with SPARK_Mode => On is
 
    subtype Word_Text is String (1 .. 12);
 
@@ -438,4 +438,4 @@ package body Ada_Outline.Lexer with SPARK_Mode => On is
       end case;
    end Next;
 
-end Ada_Outline.Lexer;
+end Outline.Lexer;

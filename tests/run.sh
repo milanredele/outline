@@ -1,7 +1,7 @@
 #!/bin/sh
 # SPDX-License-Identifier: Apache-2.0
 #
-# The checks of ada_outline, one PASS/FAIL/SKIP line each; exit status 1 if one failed.
+# The checks of outline, one PASS/FAIL/SKIP line each; exit status 1 if one failed.
 #
 #   tests/run.sh [<corpus>=<checkout> ...]
 #
@@ -63,7 +63,7 @@ for arg in "$@"; do
 done
 
 if command -v "$GNATPROVE" > /dev/null 2>&1; then
-   if "$ALR" -n exec -- "$GNATPROVE" -P ada_outline.gpr -u ada_outline-lexer.adb -j0 \
+   if "$ALR" -n exec -- "$GNATPROVE" -P outline.gpr -u outline-lexer.adb -j0 \
          > "$LOGS/prove.log" 2>&1; then
       report PASS "proof ($(awk '$1 == "Total" {print $2 " checks, " ($NF == "." ? 0 : $NF) " unproved"}' obj/gnatprove/gnatprove.out))"
    else

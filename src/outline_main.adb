@@ -1,20 +1,20 @@
 --  SPDX-License-Identifier: Apache-2.0
 --
---  The command line of ada_outline. For now only the lexer is in place:
+--  The command line of outline. For now only the lexer is in place:
 --
---    ada_outline --tokens FILE   every token of FILE: line:column, kind, text
+--    outline --tokens FILE   every token of FILE: line:column, kind, text
 
 with Ada.Command_Line;
 with Ada.Text_IO;
-with Ada_Outline.Files;
-with Ada_Outline.Lexer;
+with Outline.Files;
+with Outline.Lexer;
 
-procedure Ada_Outline_Main is
+procedure Outline_Main is
    use Ada.Text_IO;
-   use Ada_Outline.Lexer;
+   use Outline.Lexer;
 
    procedure Dump_Tokens (Path : String) is
-      Source : constant String := Ada_Outline.Files.Read (Path);
+      Source : constant String := Outline.Files.Read (Path);
       C      : Cursor := Start (Source);
       T      : Token;
    begin
@@ -34,7 +34,7 @@ begin
    if CL.Argument_Count = 2 and then CL.Argument (1) = "--tokens" then
       Dump_Tokens (CL.Argument (2));
    else
-      Put_Line (Standard_Error, "usage: ada_outline --tokens FILE");
+      Put_Line (Standard_Error, "usage: outline --tokens FILE");
       CL.Set_Exit_Status (CL.Failure);
    end if;
-end Ada_Outline_Main;
+end Outline_Main;

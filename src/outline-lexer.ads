@@ -21,7 +21,7 @@
 --  P.all'Size, Character'('x')), and otherwise the start of a character
 --  literal when the byte after the next one is an apostrophe.
 
-package Ada_Outline.Lexer with SPARK_Mode => On is
+package Outline.Lexer with SPARK_Mode => On is
 
    type Token_Kind is
      (Identifier,         --  also an attribute designator after a tick,
@@ -138,4 +138,4 @@ private
 
    function Line_Of (C : Cursor) return Positive is (C.Line);
 
-end Ada_Outline.Lexer;
+end Outline.Lexer;
