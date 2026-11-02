@@ -1,7 +1,7 @@
-obj/
-bin/
-alire/
-config/
+/obj/
+/bin/
+/alire/
+/config/
 tests/reference/outputs/
 tests/**/obj/
 tests/**/bin/
