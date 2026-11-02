@@ -5,15 +5,22 @@
 #
 #   tests/run.sh [<corpus>=<checkout> ...]
 #
-#   1. build          alr build, no warning or style message (-gnatwe)
-#   2. lexer cases    tests/lexer/bin/test_lexer, the unit cases
-#   3. corpus <name>  per corpus given (a name of tests/reference/corpora.txt and a checkout
-#                     of it, at any revision): every .ads/.adb under its roots lexes back to
-#                     itself with no invalid token, and its line counts are those of the
-#                     oracle (tests/reference/oracle_outline.py --units) on the same checkout
-#   4. proof          gnatprove on the lexer: every check proved (SKIP without gnatprove)
+#   1. build             alr build, no warning or style message (-gnatwe)
+#   2. lexer cases       tests/lexer/bin/test_lexer, the unit cases
+#   3. config            tests/config/run.sh: root and search roots, operators, compat mode
+#   per corpus given (a name of tests/reference/corpora.txt and a checkout of it):
+#   4. lexer <name>      every .ads/.adb under its roots lexes back to itself with no invalid
+#                        token, and its line counts are those of the oracle
+#                        (tests/reference/oracle_outline.py --units) on the same checkout
+#   5. compat <name>     the reference set with OUTLINE_PY_COMPAT=1: every command prints what
+#                        outline.py printed, the help text aside (checkout at the pinned revision)
+#   6. reference <name>  the reference set: every command prints what outline.py printed, or
+#                        differs as tests/reference/known_differences.txt says
+#   7. proof             gnatprove on the lexer: every check proved (SKIP without gnatprove)
 #
 # e.g. tests/run.sh etcs-dmi=../etcs-dmi FreedomChat=../FreedomChat
+# Steps 5 and 6 need the checkout at the revision of corpora.txt and take minutes
+# (etcs-dmi: about 4 each on two cores); OUTLINE_QUICK=1 skips them.
 # ALR (default alr on PATH) and GNATPROVE (default gnatprove on PATH) may name the tools.
 set -u
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
@@ -39,6 +46,12 @@ else
    tail -20 "$LOGS/lexer.log"; report FAIL "lexer cases (log $LOGS/lexer.log)"
 fi
 
+if tests/config/run.sh > "$LOGS/config.log" 2>&1; then
+   report PASS "config ($(tail -1 "$LOGS/config.log"))"
+else
+   tail -20 "$LOGS/config.log"; report FAIL "config (log $LOGS/config.log)"
+fi
+
 for arg in "$@"; do
    name=${arg%%=*}
    checkout=$(cd "${arg#*=}" && pwd) || { report FAIL "corpus $name: no checkout ${arg#*=}"; continue; }
@@ -54,12 +67,25 @@ for arg in "$@"; do
       | awk '{print $1, $5}' | sort -k2 > "$LOGS/lines-$name.py"
    files=$(wc -l < "$LOGS/lines-$name.ada")
    if [ $rc = 0 ] && cmp -s "$LOGS/lines-$name.ada" "$LOGS/lines-$name.py"; then
-      report PASS "corpus $name ($files files, $(awk '{s+=$1} END {print s}' "$LOGS/lines-$name.ada") lines)"
+      report PASS "lexer $name ($files files, $(awk '{s+=$1} END {print s}' "$LOGS/lines-$name.ada") lines)"
    else
       grep -vE '^ *[0-9]+ [^ ]+$' "$log" | head -20
       diff "$LOGS/lines-$name.ada" "$LOGS/lines-$name.py" | head -10
-      report FAIL "corpus $name (log $log)"
+      report FAIL "lexer $name (log $log)"
    fi
+   if [ "${OUTLINE_QUICK:-0}" = 1 ]; then
+      report SKIP "compat $name, reference $name (OUTLINE_QUICK=1)"
+      continue
+   fi
+   for mode in compat reference; do
+      log=$LOGS/$mode-$name.log
+      flag=; [ $mode = compat ] && flag=--compat
+      if python3 tests/reference/compare.py "$name" "$checkout" $flag --known > "$log" 2>&1; then
+         report PASS "$mode $name ($(head -1 "$log" | cut -d: -f2- | sed 's/^ //'))"
+      else
+         head -25 "$log"; report FAIL "$mode $name (log $log)"
+      fi
+   done
 done
 
 if command -v "$GNATPROVE" > /dev/null 2>&1; then
