@@ -14,7 +14,7 @@ procedure Outline_Main is
    package CL renames Ada.Command_Line;
    package Cmd renames Outline.Commands;
 
-   Version : constant String := "0.1.0-dev";
+   Version : constant String := "0.1.0";
 
    Help : constant WWS_List :=
      [+"outline: read Ada units piecewise, instead of whole.",

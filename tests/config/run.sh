@@ -6,7 +6,8 @@
 # functions. Builds small trees in a temporary directory; exit status 1 on a failure.
 set -u
 BIN=$(cd "$(dirname "$0")/../.." && pwd)/bin/outline
-T=$(mktemp -d)
+# physical path: outline reports the resolved directory (macOS: /var is a link to /private/var)
+T=$(cd "$(mktemp -d)" && pwd -P)
 trap 'rm -rf "$T"' EXIT
 unset OUTLINE_ROOT OUTLINE_ROOTS OUTLINE_PY_COMPAT
 FAILS=0

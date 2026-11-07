@@ -5,7 +5,7 @@
 #
 #   tests/run.sh [<corpus>=<checkout> ...]
 #
-#   1. build             alr build, no warning or style message (-gnatwe)
+#   1. build             alr build, no warning or style message (OUTLINE_STRICT=yes: -gnatwe)
 #   2. lexer cases       tests/lexer/bin/test_lexer, the unit cases
 #   3. config            tests/config/run.sh: root and search roots, operators, compat mode
 #   per corpus given (a name of tests/reference/corpora.txt and a checkout of it):
@@ -33,13 +33,13 @@ FAILED=0
 report () { printf '%-4s  %s\n' "$1" "$2"; [ "$1" = FAIL ] && FAILED=1; return 0; }
 
 cd "$ROOT" || exit 2
-if "$ALR" -n build > "$LOGS/build.log" 2>&1; then
+if "$ALR" -n build -- -XOUTLINE_STRICT=yes > "$LOGS/build.log" 2>&1; then
    report PASS build
 else
    tail -20 "$LOGS/build.log"; report FAIL "build (log $LOGS/build.log)"
 fi
 
-if "$ALR" -n exec -- gprbuild -q -P tests/lexer/test_lexer.gpr > "$LOGS/lexer.log" 2>&1 \
+if "$ALR" -n exec -- gprbuild -q -XOUTLINE_STRICT=yes -P tests/lexer/test_lexer.gpr > "$LOGS/lexer.log" 2>&1 \
    && tests/lexer/bin/test_lexer >> "$LOGS/lexer.log" 2>&1; then
    report PASS "lexer cases ($(tail -1 "$LOGS/lexer.log"))"
 else

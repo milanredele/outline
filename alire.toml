@@ -1,10 +1,21 @@
 name = "outline"
 description = "Read Ada units piecewise: subprograms, contracts, declarations"
-version = "0.1.0-dev"
+version = "0.1.0"
 licenses = "Apache-2.0"
 authors = ["Milán Redele"]
 maintainers = ["Milán Redele <milan.redele@gmail.com>"]
 maintainers-logins = ["milanredele"]
+website = "https://github.com/milanredele/outline"
 tags = ["ada", "spark", "tool", "agents", "outline"]
 executables = ["outline"]
 project-files = ["outline.gpr"]
+
+# Paths are handled as POSIX paths: "/" as the only separator and root, ":" between the
+# entries of OUTLINE_ROOTS.
+[available."case(os)"]
+windows = false
+"..." = true
+
+# The sources are Ada 2022; 12 is the oldest compiler they were built with (10 rejects -gnat2022).
+[[depends-on]]
+gnat = ">=12"

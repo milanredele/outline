@@ -140,8 +140,12 @@ On etcs-dmi, against `outline.py` (Python 3.13, GNU grep for `--refs`):
 
 ## Building
 
-With [Alire](https://alire.ada.dev) 2.x: `alr build` gives `bin/outline`; `alr install` puts it
-on your path. `outline --tokens FILE` prints the tokens of a file (a development aid).
+With [Alire](https://alire.ada.dev) 2.x, `alr install outline` puts it on your path. In a checkout,
+`alr build` gives `bin/outline` and `alr install` installs that build. It needs GNAT 12 or newer,
+and runs on Linux and macOS, not on Windows: it handles paths as POSIX paths.
+
+`alr build -- -XOUTLINE_STRICT=yes` makes warnings errors, as `tests/run.sh` does.
+`outline --tokens FILE` prints the tokens of a file (a development aid).
 
 ## Licence
 
