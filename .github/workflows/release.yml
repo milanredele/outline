@@ -1,0 +1,46 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  linux-x86_64:
+    # The oldest runner available: the binary needs the glibc of the system it is built on, or newer.
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: alire-project/setup-alire@fc4c8ce471aa30b3af0d39ce15add1ee9eaf28f2 # v6.0.0
+
+      - name: The tag, the manifest and the program agree on the version
+        run: |
+          version=${GITHUB_REF_NAME#v}
+          grep -qxF "version = \"$version\"" alire.toml \
+            || { echo "::error::alire.toml does not say version $version"; exit 1; }
+          grep -qF "Version : constant String := \"$version\";" src/outline_main.adb \
+            || { echo "::error::src/outline_main.adb does not say version $version"; exit 1; }
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+
+      # Builds bin/outline, the binary that is released.
+      - name: Build and test
+        run: tests/run.sh
+
+      - name: Package
+        run: |
+          test "$(bin/outline --version)" = "outline $VERSION"
+          name=outline-$VERSION-linux-x86_64
+          mkdir "$name"
+          cp bin/outline LICENSE README.md "$name"
+          tar czf "$name.tar.gz" "$name"
+          sha256sum "$name.tar.gz" > "$name.tar.gz.sha256"
+          echo "PACKAGE=$name" >> "$GITHUB_ENV"
+
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" "$PACKAGE.tar.gz" "$PACKAGE.tar.gz.sha256" \
+            --verify-tag --generate-notes --title "outline $VERSION"
